@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="T2 Lausanne"/>
+<meta name="theme-color" content="#06060d"/>
+<title>T2 Lausanne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ─────────────────────────────── */
+:root{
+  --bg:#06060d;--s1:#0c0c18;--s2:#111120;
+  --rim:#1f1f35;--rim2:#2a2a45;
+  --txt:#e0e0f0;--sub:#606080;--sub2:#38385a;
+  --i:#00f090;--i1:rgba(0,240,144,.09);--i2:rgba(0,240,144,.22);
+  --k:#00ccff;--k1:rgba(0,204,255,.09);--k2:rgba(0,204,255,.24);
+  --v:#b06cff;--v1:rgba(176,108,255,.09);--v2:rgba(176,108,255,.24);
+  --a:#ffb700;--a1:rgba(255,183,0,.09);--a2:rgba(255,183,0,.24);
+  --r:#ff3355;--r1:rgba(255,51,85,.09);--r2:rgba(255,51,85,.24);
+  --b:#4d8fff;--b1:rgba(77,143,255,.09);--b2:rgba(77,143,255,.24);
+  --y:#f5c400;--y1:rgba(245,196,0,.09);--y2:rgba(245,196,0,.24);
+  --rad:12px;--radL:16px;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+/* ── RESET ──────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Space Grotesk',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+button{border:none;cursor:pointer;font-family:inherit;touch-action:manipulation}
+input,textarea{font-family:inherit;touch-action:manipulation}
+#app{height:100%;display:flex;flex-direction:column;max-width:520px;margin:0 auto}
+
+/* ── HEADER ─────────────────────────────── */
+.hdr{padding:calc(var(--st)+11px) 14px 11px;background:var(--bg);border-bottom:1px solid var(--rim);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-family:'Unbounded',sans-serif;font-size:17px;font-weight:900;letter-spacing:-.3px}
+.logo b{color:var(--i)}
+.pills{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:60%}
+.pill{padding:3px 9px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.5px;border:1px solid;white-space:nowrap}
+.pi{background:var(--i1);color:var(--i);border-color:var(--i2)}
+.pk{background:var(--k1);color:var(--k);border-color:var(--k2)}
+.pv{background:var(--v1);color:var(--v);border-color:var(--v2)}
+.ps{background:var(--s2);color:var(--sub);border-color:var(--rim2)}
+
+/* ── TABS ───────────────────────────────── */
+.tabs{display:flex;background:var(--bg);border-bottom:1px solid var(--rim);padding:7px 10px;gap:5px}
+.tab{flex:1;height:36px;border-radius:9px;border:1px solid var(--rim2);background:var(--s1);color:var(--sub);font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;transition:all .14s}
+.tab.on{background:var(--i1);border-color:var(--i2);color:var(--i)}
+
+/* ── SCREENS ────────────────────────────── */
+.pg{display:none;flex:1;overflow-y:auto;padding:13px 12px;padding-bottom:calc(var(--sb)+30px)}
+.pg.on{display:block}
+.lbl{font-size:9px;letter-spacing:3px;color:var(--sub);text-transform:uppercase;margin:16px 0 8px}
+.lbl:first-child{margin-top:0}
+.hint{font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:9px}
+.empty{text-align:center;color:var(--sub);padding:48px 20px;font-size:13px;line-height:2}
+
+/* ── BUTTONS ────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:50px;padding:0 18px;border-radius:var(--rad);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:.2px;transition:all .12s;white-space:nowrap;border:1px solid transparent}
+.btn:active{transform:scale(.93)}
+.bi{background:var(--i);color:#000}
+.bs{background:var(--s2);color:var(--txt);border-color:var(--rim2)}
+.ba{background:var(--a1);color:var(--a);border-color:var(--a2)}
+.br{background:var(--r1);color:var(--r);border-color:var(--r2)}
+.by{background:var(--y);color:#000}
+.bw{width:100%;display:flex}
+.brow{display:flex;gap:8px;margin-bottom:8px}
+
+/* ── TEXTAREA ───────────────────────────── */
+.ta{width:100%;background:var(--s1);border:1px solid var(--rim2);border-radius:var(--radL);color:var(--txt);font-size:13px;padding:13px;outline:none;resize:none;line-height:1.75;transition:border-color .2s}
+.ta:focus{border-color:var(--i2)}
+.ta::placeholder{color:var(--sub2)}
+
+/* ── DETECT BOX ─────────────────────────── */
+.dbox{display:none;border-radius:var(--rad);padding:12px 14px;margin-top:9px}
+.dbox.show{display:block}
+.dbi{background:var(--i1);border:1px solid var(--i2)}
+.dbox-ttl{font-size:9px;color:var(--i);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px}
+.dtags{display:flex;flex-wrap:wrap;gap:5px}
+.dtag{background:var(--i);color:#000;border-radius:7px;padding:4px 10px;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700}
+.dtag-sp{background:var(--y);color:#000;border-radius:7px;padding:3px 7px;font-size:10px;font-weight:700}
+
+/* ── MANUAL ADD ROW ─────────────────────── */
+.add-row{display:flex;gap:8px;margin-bottom:4px}
+.ni{width:72px;height:50px;background:var(--s1);border:1px solid var(--rim2);border-radius:var(--rad);color:var(--txt);font-size:20px;font-weight:700;text-align:center;outline:none;transition:border-color .2s}
+.ni:focus{border-color:var(--i2)}
+
+/* ── TOUR 312 GRID ──────────────────────── */
+.sp-grid{display:none;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px;margin-bottom:6px}
+.sp-grid.open{display:grid}
+.spg-btn{height:52px;border-radius:11px;border:1px solid var(--rim2);background:var(--s1);color:var(--sub);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;transition:all .12s;display:flex;align-items:center;justify-content:center}
+.spg-btn:active{transform:scale(.87)}
+.spg-btn.on{background:var(--y);border-color:var(--y);color:#000;font-weight:900}
+
+/* ── SAVED SP CHIPS ─────────────────────── */
+.sp-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;min-height:24px}
+.sp-chip{background:var(--s2);border:1px solid var(--y2);border-radius:9px;padding:5px 10px;font-size:12px;display:inline-flex;align-items:center;gap:5px}
+.sp-chip-id{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:900;color:var(--y)}
+.sp-chip-k{font-size:9px;color:var(--k);font-weight:700}
+.sp-chip-v{font-size:9px;color:var(--v);font-weight:700}
+.sp-chip-x{color:var(--sub);font-size:15px;cursor:pointer;opacity:.7;line-height:1}
+.sp-chip-x:active{opacity:1}
+
+/* ── ROUTE CARDS ────────────────────────── */
+.rcards{display:flex;flex-direction:column;gap:8px}
+/* Base card */
+.rcard{background:var(--s1);border:1px solid var(--rim2);border-radius:var(--radL);overflow:hidden;transition:border-color .2s}
+/* Current */
+.rcard.cur{border-color:var(--i)}
+/* BLUE = both lists (IDEXX + special) */
+.rcard.card-blue{border-color:var(--b2)}
+.rcard.card-blue.cur{border-color:var(--b)}
+/* YELLOW = special only */
+.rcard.card-yellow{border-color:var(--y2)}
+.rcard.card-yellow.cur{border-color:var(--y)}
+/* KP override */
+.rcard.card-kp{border-color:var(--r2)}
+/* Done */
+.rcard.card-done{opacity:.35}
+.rcard.card-done .ep,.rcard.card-done .rc-gps,.rcard.card-done .rc-info,.rcard.card-done .rc-stags{pointer-events:none}
+
+/* Card top row */
+.rc-top{display:flex;align-items:stretch;min-height:70px}
+
+/* GPS number button */
+.rc-gps{width:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--i1);flex-shrink:0;border:none;transition:all .13s;gap:2px;padding:6px 0}
+.rc-gps:active{background:var(--i);transform:scale(.94)}
+.rcard.card-blue .rc-gps{background:var(--b1)}
+.rcard.card-blue .rc-gps:active{background:var(--b)}
+.rcard.card-yellow .rc-gps{background:var(--y1)}
+.rcard.card-yellow .rc-gps:active{background:var(--y)}
+.rcard.card-done .rc-gps{background:transparent}
+.rcard.card-kp .rc-gps{background:var(--r1)}
+.rc-gps-n{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;color:var(--i);line-height:1}
+.rcard.card-blue .rc-gps-n{color:var(--b)}
+.rcard.card-yellow .rc-gps-n{color:var(--y)}
+.rcard.card-done .rc-gps-n{color:var(--sub)}
+.rcard.card-kp .rc-gps-n{color:var(--r)}
+.rc-gps-ico{font-size:13px;opacity:.55}
+
+/* Card info */
+.rc-info{flex:1;padding:9px 11px;min-width:0;cursor:pointer;display:flex;flex-direction:column;justify-content:center}
+.rc-name{font-size:11px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.rc-addr{font-size:9px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.rc-stags{display:flex;gap:3px;flex-wrap:wrap}
+.stag{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;border:1px solid;letter-spacing:.3px}
+.st-i{background:var(--i1);color:var(--i);border-color:var(--i2)}
+.st-k{background:var(--k1);color:var(--k);border-color:var(--k2)}
+.st-v{background:var(--v1);color:var(--v);border-color:var(--v2)}
+.st-gp{background:var(--a1);color:var(--a);border-color:var(--a2)}
+.st-kp{background:var(--r1);color:var(--r);border-color:var(--r2)}
+.st-sp{background:var(--y1);color:var(--y);border-color:var(--y2)}
+.st-z{background:var(--s2);color:var(--sub);border-color:var(--rim2)}
+
+/* Done ring */
+.rc-right{display:flex;align-items:center;padding:0 10px;flex-shrink:0}
+.dring{width:30px;height:30px;border-radius:50%;border:2px solid var(--rim2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .14s;flex-shrink:0}
+.dring.on{background:var(--i);border-color:var(--i)}
+.dring.on::after{content:'✓';color:#000;font-size:14px;font-weight:900}
+
+/* Entry panel */
+.ep{border-top:1px solid var(--rim);padding:11px;display:none;flex-direction:column;gap:8px}
+.ep.open{display:flex}
+
+/* GPS btn inside panel */
+.gps-btn{width:100%;height:42px;border-radius:10px;background:var(--i1);color:var(--i);border:1px solid var(--i2);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .12s}
+.gps-btn:active{background:var(--i);color:#000;transform:scale(.97)}
+
+/* Lab counter rows */
+.lrow{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--rim2);border-radius:11px;padding:7px 9px}
+.lrow.dis{opacity:.3;pointer-events:none}
+.lic{font-family:'Unbounded',sans-serif;font-size:17px;font-weight:900;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1px solid;flex-shrink:0}
+.li-i{background:var(--i1);color:var(--i);border-color:var(--i2)}
+.li-k{background:var(--k1);color:var(--k);border-color:var(--k2)}
+.li-v{background:var(--v1);color:var(--v);border-color:var(--v2)}
+.li-gp{background:var(--a1);color:var(--a);border-color:var(--a2);font-size:13px}
+.lnm{flex:1;min-width:0}
+.lnm span{display:block;font-size:9px;color:var(--sub);letter-spacing:1px;text-transform:uppercase}
+.lnm b{display:block;font-size:12px;color:var(--txt);font-weight:700}
+.lnm b.ci{color:var(--i)}.lnm b.ck{color:var(--k)}.lnm b.cv{color:var(--v)}.lnm b.ca{color:var(--a)}
+.cbtn{width:44px;height:44px;border-radius:11px;border:1px solid var(--rim2);background:var(--s1);color:var(--txt);font-family:'Unbounded',sans-serif;font-size:24px;display:flex;align-items:center;justify-content:center;transition:all .11s}
+.cbtn:active{transform:scale(.82);background:var(--s2)}
+.cval{font-family:'Unbounded',sans-serif;font-size:32px;font-weight:900;min-width:42px;text-align:center;line-height:1}
+.cv-i{color:var(--i)}.cv-k{color:var(--k)}.cv-v{color:var(--v)}.cv-gp{color:var(--a)}
+.cval.z{color:var(--sub)}
+
+/* KP button */
+.kp-btn{width:100%;height:48px;border-radius:11px;font-family:'Unbounded',sans-serif;font-size:17px;font-weight:700;border:1px solid var(--r2);background:var(--r1);color:var(--r);transition:all .12s;letter-spacing:1px}
+.kp-btn:active{transform:scale(.93)}
+.kp-btn.on{background:var(--r);color:#fff;border-color:var(--r)}
+
+/* Map row */
+.map-row{display:flex;gap:7px;margin-bottom:11px}
+
+/* Done banner */
+.done-banner{background:var(--i1);border:1px solid var(--i2);border-radius:var(--radL);padding:14px 16px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:10px}
+.done-banner.show{display:flex}
+.db-txt{font-size:13px;font-weight:700;color:var(--i)}
+.db-sub{font-size:10px;color:var(--sub);margin-top:2px}
+
+/* ── SUMMARY ────────────────────────────── */
+.sum-hero{background:var(--i1);border:1px solid var(--i2);border-radius:var(--radL);padding:20px;text-align:center;margin-bottom:13px}
+.sum-n{font-family:'Unbounded',sans-serif;font-size:68px;font-weight:900;color:var(--i);line-height:1}
+.sum-l{font-size:9px;color:var(--sub);letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+.sum-bd{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.sbd{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;padding:4px 10px;border-radius:7px;border:1px solid}
+.sbd-i{background:var(--i1);color:var(--i);border-color:var(--i2)}
+.sbd-k{background:var(--k1);color:var(--k);border-color:var(--k2)}
+.sbd-v{background:var(--v1);color:var(--v);border-color:var(--v2)}
+.sbd-gp{background:var(--a1);color:var(--a);border-color:var(--a2)}
+
+/* Color legend */
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-size:10px}
+.legend span{display:flex;align-items:center;gap:4px}
+
+/* WA preview */
+.wa-box{background:var(--s1);border:1px solid var(--rim2);border-radius:var(--rad);padding:14px 16px;margin-bottom:11px;font-size:15px;line-height:2.1}
+.wn{color:var(--i);font-weight:700}   /* IDEXX only */
+.wb{color:var(--b);font-weight:700}   /* IDEXX + K/V */
+.wy{color:var(--y);font-weight:700}   /* K/V only */
+.wg{color:var(--a);font-weight:700}   /* has GP */
+.wkp{color:var(--r);font-weight:700}  /* KP */
+
+/* Detail rows */
+.det-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.det-row{display:flex;align-items:center;padding:10px 13px;background:var(--s1);border:1px solid var(--rim);border-radius:10px}
+.dr-id{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;color:var(--i);min-width:44px}
+.dr-nm{flex:1;font-size:10px;padding:0 8px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dr-tags{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+
+/* History */
+.hcard{background:var(--s1);border:1px solid var(--rim2);border-radius:var(--radL);padding:13px;margin-bottom:7px}
+.hd{font-size:9px;color:var(--sub);margin-bottom:7px;letter-spacing:1px}
+.hstats{display:flex;gap:14px;margin-bottom:7px;flex-wrap:wrap}
+.hs{font-size:11px;color:var(--txt)}
+.hs b{font-family:'Unbounded',sans-serif;font-size:17px;font-weight:900}
+.hsi b{color:var(--i)}.hsk b{color:var(--k)}.hsv b{color:var(--v)}
+.hwa{font-size:11px;color:var(--sub);line-height:1.8;font-family:monospace}
+
+/* Modal */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:60;align-items:flex-end;justify-content:center}
+.mbg.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--rim2);border-radius:20px 20px 0 0;padding:20px 14px calc(var(--sb)+22px);width:100%;max-width:520px}
+.mo-id{font-family:'Unbounded',sans-serif;font-size:38px;font-weight:900;color:var(--i);margin-bottom:3px}
+.mo-nm{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px}
+.mo-ad{font-size:10px;color:var(--sub);margin-bottom:11px}
+.mo-note{font-size:12px;color:var(--a);line-height:1.6;padding:11px;background:var(--a1);border-radius:9px;border:1px solid var(--a2);margin-bottom:13px}
+.mo-sp-badge{font-size:11px;color:var(--y);background:var(--y1);border:1px solid var(--y2);border-radius:8px;padding:6px 12px;margin-bottom:12px;display:none}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(var(--sb)+18px);left:50%;transform:translateX(-50%) translateY(80px);background:var(--i);color:#000;padding:11px 24px;border-radius:40px;font-size:12px;font-weight:700;z-index:100;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.hdiv{height:1px;background:var(--rim);margin:13px 0}
+.gap{height:8px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">T2 <b>Lausanne</b></div>
+  <div class="pills">
+    <span class="pill pi" id="b-i">i0</span>
+    <span class="pill pk" id="b-k">k0</span>
+    <span class="pill pv" id="b-v">v0</span>
+    <span class="pill ps" id="b-stops">0 stops</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" onclick="go('cfg')">① Config</button>
+  <button class="tab"    onclick="go('tour')">② Tournée</button>
+  <button class="tab"    onclick="go('sum')">③ Résumé</button>
+  <button class="tab"    onclick="go('hist')">Histo</button>
+</div>
+
+<!-- ① CONFIG -->
+<div class="pg on" id="pg-cfg">
+
+  <div class="lbl">Stops spéciaux K / V</div>
+  <p class="hint">Sélectionner les stops qui peuvent avoir Kühne (K) ou LaborVets (V).</p>
+
+  <div class="add-row">
+    <input class="ni" id="sp-num" type="number" min="1" max="999" placeholder="N°" inputmode="numeric"/>
+    <button class="btn bi" style="flex:1" onclick="addSpNum()">+ Stop</button>
+    <button class="btn bs" id="grid-btn" onclick="toggleGrid()">Grille</button>
+  </div>
+
+  <div class="sp-grid" id="sp-grid"></div>
+
+  <div class="sp-chips" id="sp-chips">
+    <span style="font-size:11px;color:var(--sub)">Aucun stop spécial</span>
+  </div>
+  <button class="btn br" style="font-size:11px;height:36px;margin-top:8px;width:100%" onclick="clearAllSp()">🗑 Tout désélectionner</button>
+
+  <div class="hdiv"></div>
+
+  <div class="lbl">Tournée du jour (copier-coller)</div>
+  <p class="hint">Coller la liste Excel ou WhatsApp — les numéros sont extraits automatiquement.</p>
+
+  <textarea class="ta" id="ta-tour" rows="8"
+    placeholder="TOUR    Position    N&#10;Tour 12-----    20&#10;Tour 12-----    70&#10;Tour 12-----    195&#10;Tour 12-----    280&#10;..."></textarea>
+
+  <div class="dbox dbi" id="dbox-tour">
+    <div class="dbox-ttl">Stops détectés</div>
+    <div class="dtags" id="dtags-tour"></div>
+  </div>
+
+  <div class="brow" style="margin-top:9px">
+    <button class="btn bs" style="flex:1" onclick="clearTour()">Effacer</button>
+    <button class="btn bi" style="flex:2" onclick="confirmTour()">Démarrer →</button>
+  </div>
+
+  <div class="hdiv"></div>
+  <button class="btn br bw" onclick="newTour()">🗑 Nouvelle tournée</button>
+</div>
+
+<!-- ② TOURNÉE -->
+<div class="pg" id="pg-tour">
+
+  <div class="done-banner" id="done-banner">
+    <div>
+      <div class="db-txt">✅ Tous les stops sont faits !</div>
+      <div class="db-sub">Résumé WhatsApp prêt</div>
+    </div>
+    <button class="btn bi" onclick="go('sum')" style="flex-shrink:0">Résumé →</button>
+  </div>
+
+  <div class="map-row">
+    <button class="btn bi" style="flex:1" onclick="mapsAll()">🗺 GPS Tournée</button>
+    <button class="btn ba" id="btn-next" onclick="suivant()">Suivant →</button>
+  </div>
+
+  <div class="lbl" id="tour-lbl">Stops</div>
+  <div class="rcards" id="rcards"></div>
+</div>
+
+<!-- ③ RÉSUMÉ -->
+<div class="pg" id="pg-sum">
+  <div class="sum-hero">
+    <div class="sum-n" id="sum-total">0</div>
+    <div class="sum-l">sacs total</div>
+    <div class="sum-bd" id="sum-bd"></div>
+  </div>
+
+  <div class="lbl" id="sum-date"></div>
+
+  <div class="legend">
+    <span><span style="color:var(--i)">■</span> IDEXX seul</span>
+    <span><span style="color:var(--b)">■</span> IDEXX+K/V</span>
+    <span><span style="color:var(--y)">■</span> K/V seul</span>
+    <span><span style="color:var(--a)">■</span> GP</span>
+    <span><span style="color:var(--r)">■</span> KP</span>
+  </div>
+
+  <div class="wa-box" id="wa-box"></div>
+
+  <button class="btn bi bw" onclick="copyWA()" style="height:54px;font-size:14px;margin-bottom:9px">
+    📋 Copier pour WhatsApp
+  </button>
+
+  <div class="det-list" id="det-list"></div>
+  <div class="hdiv"></div>
+  <button class="btn br bw" onclick="saveTour()">💾 Sauvegarder &amp; terminer</button>
+</div>
+
+<!-- HISTORIQUE -->
+<div class="pg" id="pg-hist">
+  <div class="lbl">Tournées précédentes</div>
+  <div id="hist-list"></div>
+  <div class="gap"></div>
+  <button class="btn br bw" onclick="clearHist()">🗑 Effacer l'historique</button>
+</div>
+
+</div><!-- #app -->
+
+<!-- MODAL -->
+<div class="mbg" id="mbg">
+  <div class="modal">
+    <div class="mo-id" id="mo-id"></div>
+    <div class="mo-nm" id="mo-nm"></div>
+    <div class="mo-ad" id="mo-ad"></div>
+    <div class="mo-note" id="mo-note"></div>
+    <div class="mo-sp-badge" id="mo-sp-badge">⚗ Stop spécial — compteurs K et V activés</div>
+    <button class="btn bi bw" id="mo-gps" style="margin-bottom:7px">🗺 Ouvrir dans Google Maps</button>
+    <button class="btn br bw" id="mo-del" style="margin-bottom:7px">🗑 Supprimer ce stop</button>
+    <button class="btn bs bw" onclick="closeMo()">Fermer</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   DONNÉES — 71 STOPS LAUSANNE
+════════════════════════════════════════════════════ */
+const STOPS=[
+  {id:1,  n:"Cabinet Artevet",                       a:"Route de l'Hotel de Ville 11, 1344 L'Abbaye",      note:""},
+  {id:2,  n:"Decker",                                a:"Rue de l'Ancienne-Poste 33, 1337 Vallorbe",        note:""},
+  {id:10, n:"Centre vét. Les Grillières",             a:"Les Grands Contours 4, 1354 Montcherand",           note:"Brief-/Milchkasten unter der Treppe"},
+  {id:20, n:"Groupe Vét. des Ducats",                 a:"Rue des Ducats 38, 1350 Orbe",                      note:"Milchkasten links vom Gebäude vor 2. Eingangstüre"},
+  {id:30, n:"Erminea",                                a:"Le Grand Paquier 7a, 1373 Chavornay",               note:"IDEXX-Briefkasten rechts vom Gebäude"},
+  {id:40, n:"Pierre Girard",                          a:"Route de Chavornay 12, 1374 Corcelles-sur-Chavornay",note:"Brief-/Milchkasten"},
+  {id:50, n:"François Cloux",                         a:"Chemin Bourneaux 4A, 1315 La Sarraz",               note:"Schickt Proben per Post"},
+  {id:60, n:"SOVET petits animaux SA",                a:"Ch. de Champ-Vionnet 8, 1304 Cossonay-Ville",       note:"Briefkasten linke Seite des Eingangs"},
+  {id:70, n:"Cabinet Vét. des Terreaux Sàrl",         a:"Rue des Terreaux 1, 1304 Cossonay-Ville",           note:"Milchkasten zwischen Häuserzeilen, rechtsseitig am Haus"},
+  {id:80, n:"FamiVet Sàrl",                           a:"Chemin du Bosquet 2, 1304 Cossonay-Ville",          note:"Milchbox Eingangshalle Code 2052. Sinon Tel: 079 318 80 17"},
+  {id:90, n:"SOVET SA Vétérinaires",                  a:"Soveillame 6, 1304 Senarclens",                     note:""},
+  {id:100,n:"Cabinet vét. Sovet",                     a:"Soveillame 4, 1304 Senarclens",                     note:"Proben im Kühlschrank Eingang Cossonay-Seite. Notfall: 079 661 45 45"},
+  {id:110,n:"Cabinet vét. Jean-Philippe Mange",       a:"Soveillame 4, 1304 Senarclens",                     note:"Briefkasten hinter Tor, Rückseite des Gebäudes"},
+  {id:120,n:"Françoise Chamot-Perez",                 a:"Ch. de la Savoie 10, 1305 Penthalaz",               note:"Rechts vor Eingangstür kleine Mauer, unter einem Stein"},
+  {id:130,n:"Laurence Ferrari",                       a:"Rte de Daillens 9, 1305 Penthalaz",                 note:""},
+  {id:140,n:"FamiVet Sàrl Sullens",                   a:"Chemin des Combes 3, 1036 Sullens",                 note:"Rechts ums Haus, Innenhof, rosa Tisch, grosse Gartenbox, graue Box"},
+  {id:150,n:"Cab. Vét. du Talent SA – Bouille",       a:"Chemin de l'Usine 20, 1040 Echallens",              note:"Rechts unter Vordach: Sagexbox mit Kühlelementen"},
+  {id:160,n:"Centre vét. du Château SA",              a:"Place du Château 7, 1040 Echallens",                note:"Links beim Haupteingang (NICHT beim Praxiseingang)"},
+  {id:170,n:"Pratique Equine Pujol SA",               a:"Chemin de La Sache 1, 1042 Assens",                 note:"Grauer Schrank unter den Briefkästen"},
+  {id:180,n:"Cabinet Vét. de la Grange-Neuve SA",     a:"Rte de Grange-Neuve 1, 1053 Cugy VD/Montheron",    note:"Beim Fenster hinter Eingangstüre, zwischen 1. und 2. Türe"},
+  {id:190,n:"Centre SVPA",                            a:"Route de Berne 318, 1000 Lausanne 25",              note:"15 Min vor Ankunft anrufen: 021 784 80 02"},
+  {id:195,n:"Vetissime SA",                           a:"Le Grand-Chemin 136, 1066 Epalinges",               note:"Karton vor der Eingangstür"},
+  {id:196,n:"Maison des urgences Nord-Lausanne",      a:"Le Grand-Chemin 136, 1066 Epalinges",               note:"Karton vor der Eingangstür"},
+  {id:200,n:"Guy Herbez",                             a:"Route du Village 13, 1066 Epalinges",               note:"In blauer Kiste"},
+  {id:210,n:"Zimmerli Jean",                          a:"7, ch. d'Ofréquaz, 1066 Epalinges",                 note:"Villa an der Vorderseite"},
+  {id:220,n:"Val Schmid",                             a:"Ch. des Boveresses 166, 1066 Epalinges",            note:"Brief-/Milchkasten"},
+  {id:230,n:"Nicolas Murisier",                       a:"Ch. des Boveresses 166, 1066 Epalinges",            note:"Brief-/Milchkasten"},
+  {id:240,n:"VetOptic Sàrl",                          a:"Ch. des Boveresses 166, 1066 Epalinges",            note:"Oranger Milchkasten vor dem Gebäude"},
+  {id:250,n:"AIM-Vet Sàrl – Mélanie Pastor",          a:"Chemin du Raidillon 18C, 1066 Epalinges",           note:"Milchkasten mit Pastor angeschrieben"},
+  {id:260,n:"Cabinet vét. du Léman Sàrl",             a:"Avenue des Boveresses 18, 1010 Lausanne",           note:"Code Eingangstüre: 6714A, dann im Briefkasten"},
+  {id:270,n:"Mont-Vet",                               a:"Chemin de la Roche 6, 1052 Mont-sur-Lausanne",      note:"Brief-/Milchkasten"},
+  {id:280,n:"Cabinet vét. de la Blécherette",         a:"Ch. du Petit-Flon 30, 1052 Le Mont-sur-Lausanne",   note:"Diavet Briefkasten mit Schlüssel, Proben hinter Türe im Milchkasten"},
+  {id:290,n:"Cabinet vét. des Plaines-du-Loup",       a:"Route des Plaines-du-Loup 38, 1018 Lausanne",       note:"Briefkasten neben Eingang, Material im Milchkasten"},
+  {id:300,n:"Animed Bussigny",                        a:"Chemin de Mochettaz 2, 1030 Bussigny-Lausanne",     note:"Milchkasten beim Eingang, Code: 2580"},
+  {id:310,n:"Pascal Wicki",                           a:"Rue de l'Industrie 8, 1030 Bussigny-pres-Lausanne", note:""},
+  {id:320,n:"VetLéman / Luisa Torres",                a:"Rue de Morges 17, 1023 Crissier",                   note:"Briefkasten"},
+  {id:330,n:"Veto Chez Vous S.A.",                    a:"Chemin du Brolliet 2, 1023 Crissier",               note:"Briefkasten vor dem Eingang"},
+  {id:340,n:"VetRenens Sàrl",                         a:"Rue de l'Industrie 5, 1020 Renens VD",              note:"Tür-Code: 152A, Probe im Milchkasten"},
+  {id:350,n:"Vet4Life SARL",                          a:"Avenue de la Poste 16, 1020 Renens VD",             note:""},
+  {id:360,n:"Clinique vét. de la Charbonnière SA",    a:"Rte du Chasseur 15, 1008 Prilly",                   note:"Haupteingang bei der Treppe, Code: 1529a"},
+  {id:370,n:"Cabinet vét. CityVet Prilly",             a:"Route de Cossonay 11, 1008 Prilly",                 note:"Milchkasten in Sagex-Box"},
+  {id:380,n:"Cabinet vét. CityVet",                   a:"Avenue de France 48, 1004 Lausanne",                note:"Milchkasten rechts vom Eingang (Box aus Polystyren)"},
+  {id:390,n:"Unilabs Lausanne",                       a:"Rue de la Vigie 5, 1000 Lausanne 20",               note:"Proben im Labor – abholen bis 20:00 Uhr"},
+  {id:400,n:"Animed Sàrl",                            a:"Av. de Tivoli 3-6, 1007 Lausanne",                  note:"Proben im Briefkasten"},
+  {id:410,n:"Olivier Grin – Animed",                  a:"Av. de Tivoli 3, 1007 Lausanne",                    note:"In einem Sack vor der Praxis-Eingangstüre"},
+  {id:420,n:"Médi-Vet SA / Diserens",                 a:"Av. de Montoie 47, 1007 Lausanne",                  note:"Praxis 24h offen, läuten falls Proben nicht deponiert"},
+  {id:430,n:"Dentovet Sàrl (bei Medivet)",            a:"Avenue de Montoie 47, 1007 Lausanne",               note:"Haupttüre links ums Gebäude, Parkplatz, grosse Tür MIT CODE, dann Briefkasten"},
+  {id:440,n:"Grancy Vét. Lausanne Sàrl",              a:"Rue du Simplon 3D, 1006 Lausanne",                  note:"Briefkasten im Gebäude neben Coiffeursalon, grünes Post-It"},
+  {id:450,n:"AniCura Vetconcept SA",                  a:"Rue Marterey 52, 1005 Lausanne",                    note:"Code 68752, Brief-/Milchkasten, sonst Material im Korridor"},
+  {id:460,n:"Dr. med. vet. Ottavio Ianni",            a:"Av. Victor Ruffy 52, 1012 Lausanne",                note:"Unbedingt vor 20:00 abholen, in die Praxis hineingehen"},
+  {id:470,n:"Vetpassion / Cabinet vét. de Chailly",   a:"Avenue de Chailly 12, 1012 Lausanne",               note:"Milchfach Briefkasten in Eingangshalle, Block Nr 12, PIN: 0327#"},
+  {id:480,n:"Cabinet Vét. de la Clergère SA",         a:"Pré de la Tour 11, 1009 Pully",                     note:"Milchkasten vor Eingang"},
+  {id:490,n:"VetPully SA – Dr Romain Abos",           a:"Avenue C.-F. Ramuz 60, 1009 Pully",                 note:"Kritischer Kunde – Brief-/Milchkasten vor Eingang rechts"},
+  {id:500,n:"Vet Kibo / Muret Vetkibo",               a:"Av. Charles Ferdinand Ramuz 104, 1009 Pully",       note:"Transparente Box IDEXX / Kühn Pathologie neben Haupteingang"},
+  {id:510,n:"M.-L. Dubath",                           a:"Ch. de la Charrettaz 12, 1094 Paudex",              note:"Vor 17:00 in Praxis, roter Briefkasten Laupeneck"},
+  {id:520,n:"VetLutry & Pully SA",                    a:"Route Petite-Corniche 3, 1095 Lutry",               note:"Gegenüber Coop. Briefkasten ca. 100m links vom Praxis-Eingang"},
+  {id:530,n:"Ligue pour la Défense des Animaux",      a:"Ch. de la Grangette 171, 1090 La Croix (Lutry)",    note:"Briefkasten an Seite eines Aussengeheges vor dem Haus"},
+  {id:540,n:"Perrenoud & Klemm / Animalis Puidoux",   a:"Rte du Verney 5a, 1070 Puidoux-Gare",               note:"Proben hinter Gebäude, Personaleingang. Oder AUF/IM Briefkasten"},
+  {id:550,n:"Krebs Vétérinaires SA",                  a:"Ferme la Tuilière 1, 1073 Mollie-Margot",           note:"Eingang rechte Türe, im Wartezimmer (Tag und Nacht offen)"},
+  {id:560,n:"Cabinet vét. Argos Sàrl",                a:"Route Cantonale 16, 1077 Servion",                  note:"Zwischen Gebäuden Rampe runter, Glastüre links rot, Briefkasten Argos"},
+  {id:570,n:"Eugène Chabloz",                         a:"Ch. des Chênes 7, 1610 Oron-la-Ville",             note:""},
+  {id:580,n:"Marcel Pradervand",                      a:"Route de la Pale 11, 1046 Rueyres",                 note:"Unter dem Milchkasten rechts vor der Praxistüre"},
+  {id:590,n:"Grégoire Jaquier Vét. SA",               a:"Chemin des Troncs 9, 1063 Chapelle-sur-Moudon",    note:"Material rechts von der Garagetür"},
+  {id:600,n:"Cabinet vét. du Grande-Pré Sàrl",        a:"Chemin du Grand-Pré 3B, 1510 Moudon",              note:"Brief-/Milchkasten. Rote Box vor Service-Tür links neben Parking"},
+  {id:610,n:"Bernard Nicod",                          a:"Ch. de la Colline 10, 1510 Moudon",                 note:""},
+  {id:620,n:"Laurence Gavillet",                      a:"Rte de Vuarmarens 4, 1670 Esmonts",                 note:"Brief-/Milchkasten"},
+  {id:630,n:"Cabinet Vét. des Lilas",                 a:"Ch. des Eperleires 38, 1685 Villariaz",             note:"Eingang beim Parkplatz, hohe Mauer, Proben vor Türe im Kasten"},
+  {id:631,n:"Vet For Vets Sàrl",                      a:"Chemin des Eperleires 38, 1685 Villariaz",          note:""},
+  {id:640,n:"LNA Cabinet Vét. Sàrl",                  a:"Chemin du Dévin 4, 1681 Billens",                   note:"Briefkasten"},
+  {id:650,n:"Jacques Bosson",                         a:"Route des Echervettes 7, 1680 Romont FR",           note:"Brief-/Milchkasten"},
+  {id:660,n:"Claude Schneider",                       a:"Impasse la Croix 29, 1680 Berlens",                 note:"Kritischer Kunde – Brief-/Milchkasten"}
+];
+const SM=Object.fromEntries(STOPS.map(s=>[s.id,s]));
+const VIDS=new Set(STOPS.map(s=>s.id));
+
+/* Tour 312 — stops pouvant avoir K/V */
+const T312=[1,2,70,80,120,160,180,220,270,280,290,300,310,320,340,360,370,
+            380,410,420,430,440,470,480,490,500,520,540,550,600,630];
+
+/* ════════════════════════════════════════════════════
+   STATE
+   special    = Set<id>  K/V stops (persistant)
+   tourStops  = Set<id>  IDEXX stops du jour
+   dat        = {id:{i,k,v,gp,kp}}
+   done       = Set<id>
+════════════════════════════════════════════════════ */
+let special   = new Set();
+let tourStops = new Set();
+let dat       = {};
+let done      = new Set();
+let gridOpen  = false;
+
+function D(id){
+  if(!dat[id]) dat[id]={i:0,k:0,v:0,gp:0,kp:false};
+  return dat[id];
+}
+
+/* Helpers */
+function inBoth(id)    { return tourStops.has(id) && special.has(id); }
+function inSpOnly(id)  { return !tourStops.has(id) && special.has(id); }
+function inNorm(id)    { return tourStops.has(id) && !special.has(id); }
+function hasKV(id)     { return special.has(id); }
+function allIds()      { return [...new Set([...tourStops,...special])].sort((a,b)=>a-b); }
+function allStops()    { return allIds().map(id=>SM[id]).filter(Boolean); }
+
+/* ════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════ */
+function init(){
+  // Build Tour 312 grid
+  const grid=document.getElementById('sp-grid');
+  T312.forEach(id=>{
+    const b=document.createElement('button');
+    b.className='spg-btn'; b.id='spg-'+id; b.textContent=id;
+    b.onclick=()=>toggleSp(id);
+    grid.appendChild(b);
+  });
+  // Tour textarea live preview
+  document.getElementById('ta-tour').addEventListener('input',onTourInput);
+  // Load saved state
+  loadSpecial();
+  loadState();
+  renderHist();
+  // Fix double-tap zoom
+  document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+}
+
+/* ════════════════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════════════════ */
+function go(name){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  ['cfg','tour','sum','hist'].forEach((x,i)=>{
+    if(x===name) document.querySelectorAll('.tab')[i].classList.add('on');
+  });
+  if(name==='tour') renderTour();
+  if(name==='sum')  renderSum();
+  if(name==='hist') renderHist();
+}
+
+/* ════════════════════════════════════════════════════
+   SPECIAL STOPS
+════════════════════════════════════════════════════ */
+function toggleSp(id){
+  if(special.has(id)) special.delete(id);
+  else special.add(id);
+  syncGrid();
+  renderChips();
+  saveSpecial();
+  badge();
+  renderTourIfOpen();
+}
+function addSpNum(){
+  const el=document.getElementById('sp-num');
+  const n=parseInt(el.value);
+  if(!n||!VIDS.has(n)){ toast('Numéro de stop invalide'); return; }
+  special.add(n);
+  syncGrid();
+  renderChips();
+  saveSpecial();
+  badge();
+  renderTourIfOpen();
+  el.value='';
+  toast('Stop #'+n+' ajouté');
+}
+function toggleGrid(){
+  gridOpen=!gridOpen;
+  document.getElementById('sp-grid').classList.toggle('open',gridOpen);
+  const btn=document.getElementById('grid-btn');
+  btn.style.background=gridOpen?'var(--y)':'';
+  btn.style.color=gridOpen?'#000':'';
+  btn.style.borderColor=gridOpen?'var(--y)':'';
+}
+function syncGrid(){
+  T312.forEach(id=>{
+    const el=document.getElementById('spg-'+id);
+    if(el) el.classList.toggle('on',special.has(id));
+  });
+}
+function renderChips(){
+  const el=document.getElementById('sp-chips');
+  const ids=[...special].sort((a,b)=>a-b);
+  if(!ids.length){
+    el.innerHTML='<span style="font-size:11px;color:var(--sub)">Aucun stop spécial</span>';
+    return;
+  }
+  el.innerHTML=ids.map(id=>
+    '<span class="sp-chip">'
+    +'<span class="sp-chip-id">'+id+'</span>'
+    +'<span class="sp-chip-k">K</span>'
+    +'<span class="sp-chip-v">V</span>'
+    +'<span class="sp-chip-x" onclick="removeSp('+id+')">×</span>'
+    +'</span>'
+  ).join('');
+}
+function removeSp(id){
+  special.delete(id);
+  syncGrid();
+  renderChips();
+  saveSpecial();
+  badge();
+  renderTourIfOpen();
+}
+let _clearSpPending=false,_clearSpTimer;
+function clearAllSp(){
+  if(!_clearSpPending){
+    _clearSpPending=true;
+    toast('⚠️ Appuyer encore pour confirmer');
+    _clearSpTimer=setTimeout(()=>{_clearSpPending=false;},3000);
+    return;
+  }
+  clearTimeout(_clearSpTimer);_clearSpPending=false;
+  special.clear();
+  syncGrid();
+  renderChips();
+  saveSpecial();
+  badge();
+  renderTourIfOpen();
+}
+
+/* ════════════════════════════════════════════════════
+   TOUR PARSING
+════════════════════════════════════════════════════ */
+function parseTour(txt){
+  const found=new Set();
+  txt.split(/\n/).forEach(line=>{
+    if(!line.trim()) return;
+    const nums=[...line.matchAll(/\b(\d{1,3})\b/g)].map(m=>parseInt(m[1]));
+    // Take last valid stop ID on each line
+    for(let i=nums.length-1;i>=0;i--){
+      if(VIDS.has(nums[i])){ found.add(nums[i]); break; }
+    }
+  });
+  return [...found].sort((a,b)=>a-b);
+}
+function onTourInput(){
+  const ids=parseTour(this.value||document.getElementById('ta-tour').value);
+  const box=document.getElementById('dbox-tour');
+  const tags=document.getElementById('dtags-tour');
+  if(!ids.length){ box.classList.remove('show'); return; }
+  box.classList.add('show');
+  tags.innerHTML=ids.map(id=>{
+    const sp=special.has(id);
+    return '<span class="dtag">'+id+'</span>'+(sp?'<span class="dtag-sp">K/V</span>':'');
+  }).join('');
+}
+function confirmTour(){
+  const txt=document.getElementById('ta-tour').value.trim();
+  if(!txt){ toast('Colle d\'abord la liste des stops'); return; }
+  const ids=parseTour(txt);
+  if(!ids.length){ toast('Aucun stop valide détecté'); return; }
+  ids.forEach(id=>tourStops.add(id));
+  badge();
+  saveState();
+  const sp=ids.filter(id=>special.has(id)).length;
+  toast(ids.length+' stop(s) ajouté(s)'+(sp?' · '+sp+' spéciaux':''));
+  document.getElementById('ta-tour').value='';
+  document.getElementById('dbox-tour').classList.remove('show');
+  go('tour');
+}
+function clearTour(){
+  document.getElementById('ta-tour').value='';
+  document.getElementById('dbox-tour').classList.remove('show');
+}
+let _newTourPending=false,_newTourTimer;
+function newTour(){
+  if(!_newTourPending){
+    _newTourPending=true;
+    toast('⚠️ Appuyer encore pour confirmer');
+    _newTourTimer=setTimeout(()=>{_newTourPending=false;},3000);
+    return;
+  }
+  clearTimeout(_newTourTimer);_newTourPending=false;
+  tourStops.clear();dat={};done.clear();
+  badge();saveState();renderTourIfOpen();
+  toast('✓ Nouvelle tournée prête');
+}
+function badge(){
+  document.getElementById('b-stops').textContent=allIds().length+' stops';
+  let ti=0,tk=0,tv=0;
+  allIds().forEach(id=>{
+    const d=dat[id]; if(!d||d.kp) return;
+    ti+=d.i||0; tk+=d.k||0; tv+=d.v||0;
+  });
+  document.getElementById('b-i').textContent='i'+ti;
+  document.getElementById('b-k').textContent='k'+tk;
+  document.getElementById('b-v').textContent='v'+tv;
+}
+function renderTourIfOpen(){
+  if(document.getElementById('pg-tour').classList.contains('on')) renderTour();
+}
+
+/* ════════════════════════════════════════════════════
+   SUIVANT
+════════════════════════════════════════════════════ */
+function suivant(){
+  const pending=allStops().filter(s=>!done.has(s.id));
+  if(!pending.length){ go('sum'); toast('✅ Tournée terminée !'); return; }
+  openGM(pending[0].a);
+  toast('🗺 Stop #'+pending[0].id);
+}
+
+/* ════════════════════════════════════════════════════
+   RENDER TOURNÉE
+════════════════════════════════════════════════════ */
+function renderTour(){
+  const stops=allStops();
+  const pending=stops.filter(s=>!done.has(s.id));
+  document.getElementById('tour-lbl').textContent=stops.length+' stop(s) aujourd\'hui';
+
+  // Banner + button state
+  const banner=document.getElementById('done-banner');
+  const btnNext=document.getElementById('btn-next');
+  if(stops.length>0&&pending.length===0){
+    banner.classList.add('show');
+    btnNext.textContent='→ Résumé'; btnNext.className='btn bi';
+  } else {
+    banner.classList.remove('show');
+    btnNext.textContent='Suivant →'; btnNext.className='btn ba';
+  }
+
+  const rc=document.getElementById('rcards');
+  if(!stops.length){
+    rc.innerHTML='<div class="empty">Aucun stop.<br>← Retour à Config.</div>';
+    return;
+  }
+  rc.innerHTML='';
+  const fp=stops.findIndex(s=>!done.has(s.id));
+
+  stops.forEach((s,idx)=>{
+    const isDone=done.has(s.id);
+    const isCur=idx===fp;
+    const d=D(s.id);
+    const both=inBoth(s.id);
+    const spOnly=inSpOnly(s.id);
+    const showKV=hasKV(s.id);
+    const showI=!spOnly; // IDEXX counter only if stop is in IDEXX tour
+
+    // Card class
+    let cc='rcard';
+    if(isDone)      cc+=' card-done';
+    else if(d.kp)   cc+=' card-kp';
+    else if(isCur)  cc+=' cur';
+    if(!isDone&&!d.kp){
+      if(both)   cc+=' card-blue';
+      else if(spOnly) cc+=' card-yellow';
+    }
+
+    // Status tags
+    let tags='';
+    if(d.kp){
+      tags='<span class="stag st-kp">KP</span>';
+    } else {
+      const ti=d.i||0,tk=d.k||0,tv=d.v||0,tg=d.gp||0;
+      const tot=ti+tk+tv;
+      if(tot===0&&tg===0){
+        tags=spOnly
+          ?'<span class="stag st-sp">K/V</span>'
+          :'<span class="stag st-z">—</span>';
+      } else {
+        if(ti>0) tags+='<span class="stag st-i">i'+ti+'</span>';
+        if(tk>0) tags+='<span class="stag st-k">k'+tk+'</span>';
+        if(tv>0) tags+='<span class="stag st-v">v'+tv+'</span>';
+        if(tg>0) tags+='<span class="stag st-gp">'+tg+'GP</span>';
+      }
+    }
+    const dis=d.kp?' dis':'';
+
+    // Lab rows
+    const rowI=showI?'<div class="lrow'+dis+'"><div class="lic li-i">I</div><div class="lnm"><span>idexx</span><b class="ci">Labor I</b></div><button class="cbtn" onclick="chg('+s.id+',\'i\',-1)">−</button><div class="cval cv-i'+((d.i||0)===0?' z':'')+'">'+( d.i||0)+'</div><button class="cbtn" onclick="chg('+s.id+',\'i\',1)">+</button></div>':'';
+    const rowK=showKV?'<div class="lrow'+dis+'"><div class="lic li-k">K</div><div class="lnm"><span>kühne</span><b class="ck">Kühne Pathologie</b></div><button class="cbtn" onclick="chg('+s.id+',\'k\',-1)">−</button><div class="cval cv-k'+((d.k||0)===0?' z':'')+'">'+( d.k||0)+'</div><button class="cbtn" onclick="chg('+s.id+',\'k\',1)">+</button></div>':'';
+    const rowV=showKV?'<div class="lrow'+dis+'"><div class="lic li-v">V</div><div class="lnm"><span>labvets</span><b class="cv">LaborVets</b></div><button class="cbtn" onclick="chg('+s.id+',\'v\',-1)">−</button><div class="cval cv-v'+((d.v||0)===0?' z':'')+'">'+( d.v||0)+'</div><button class="cbtn" onclick="chg('+s.id+',\'v\',1)">+</button></div>':'';
+    const rowGP='<div class="lrow'+dis+'"><div class="lic li-gp">❄️</div><div class="lnm"><span>gefrost</span><b class="ca">Probe GP</b></div><button class="cbtn" onclick="chg('+s.id+',\'gp\',-1)">−</button><div class="cval cv-gp'+((d.gp||0)===0?' z':'')+'">'+( d.gp||0)+'</div><button class="cbtn" onclick="chg('+s.id+',\'gp\',1)">+</button></div>';
+    const rowKP='<button class="kp-btn'+(d.kp?' on':'')+'" onclick="togKP('+s.id+')">KP — Keine Probe</button>';
+
+    const noteHtml=s.note?'<div class="rc-addr" style="color:var(--a)">💡 '+s.note.slice(0,55)+(s.note.length>55?'…':'')+'</div>':'';
+
+    const card=document.createElement('div');
+    card.className=cc; card.id='rc-'+s.id;
+    card.innerHTML=
+      '<div class="rc-top">'
+      +'<button class="rc-gps" onclick="gmStop('+s.id+')">'
+      +'<span class="rc-gps-n">'+s.id+'</span>'
+      +'<span class="rc-gps-ico">🗺</span>'
+      +'</button>'
+      +'<div class="rc-info" onclick="openMo('+s.id+')">'
+      +'<div class="rc-name">'+s.n+'</div>'
+      +'<div class="rc-addr">'+s.a+'</div>'
+      +noteHtml
+      +'<div class="rc-stags">'+tags+'</div>'
+      +'</div>'
+      +'<div class="rc-right">'
+      +'<div class="dring'+(isDone?' on':'')+'" onclick="togDone('+s.id+')"></div>'
+      +'</div>'
+      +'</div>'
+      +'<div class="ep'+(isDone?'':' open')+'">'
+      +'<button class="gps-btn" onclick="gmStop('+s.id+')">🗺 Naviguer vers ce stop</button>'
+      +rowI+rowK+rowV+rowGP+rowKP
+      +'</div>';
+    rc.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   SAISIE
+════════════════════════════════════════════════════ */
+function chg(id,lab,delta){
+  const d=D(id); if(d.kp) return;
+  d[lab]=Math.max(0,(d[lab]||0)+delta);
+  saveState(); badge(); renderTour();
+}
+function togKP(id){
+  const d=D(id); d.kp=!d.kp;
+  if(d.kp){ d.i=0; d.k=0; d.v=0; d.gp=0; }
+  saveState(); badge(); renderTour();
+}
+function togDone(id){
+  done.has(id)?done.delete(id):done.add(id);
+  saveState(); badge(); renderTour();
+}
+
+/* ════════════════════════════════════════════════════
+   GPS
+════════════════════════════════════════════════════ */
+function fixA(a){
+  return a.replace(/ü/g,'ue').replace(/Ü/g,'Ue')
+          .replace(/ä/g,'ae').replace(/Ä/g,'Ae')
+          .replace(/ö/g,'oe').replace(/Ö/g,'Oe')
+          .replace(/é/g,'e').replace(/è/g,'e')
+          .replace(/ê/g,'e').replace(/à/g,'a')
+          .replace(/â/g,'a').replace(/[–—]/g,'-');
+}
+function openGM(addr){
+  window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(fixA(addr)));
+}
+function gmStop(id){ const s=SM[id]; if(!s) return; openGM(s.a); toast('🗺 Stop #'+id); }
+function mapsAll(){
+  const stops=allStops().filter(s=>!done.has(s.id));
+  if(!stops.length){ toast('Tous les stops sont faits !'); return; }
+  if(stops.length===1){ openGM(stops[0].a); return; }
+  const dest=encodeURIComponent(fixA(stops[stops.length-1].a));
+  const wp=stops.slice(0,-1).map(s=>encodeURIComponent(fixA(s.a))).join('|');
+  window.open('https://www.google.com/maps/dir/?api=1&destination='+dest+'&waypoints='+wp+'&travelmode=driving');
+}
+
+/* ════════════════════════════════════════════════════
+   MODAL
+════════════════════════════════════════════════════ */
+function openMo(id){
+  const s=SM[id]; const sp=special.has(id);
+  document.getElementById('mo-id').textContent='#'+s.id;
+  document.getElementById('mo-nm').textContent=s.n;
+  document.getElementById('mo-ad').textContent=s.a;
+  const ne=document.getElementById('mo-note');
+  if(s.note){ ne.textContent=s.note; ne.style.display=''; }
+  else ne.style.display='none';
+  document.getElementById('mo-sp-badge').style.display=sp?'':'none';
+  document.getElementById('mo-gps').onclick=()=>openGM(s.a);
+  document.getElementById('mo-del').onclick=()=>{
+    tourStops.delete(id); special.delete(id);
+    delete dat[id]; done.delete(id);
+    syncGrid(); renderChips(); saveSpecial();
+    badge(); saveState(); closeMo(); renderTour();
+    toast('Stop #'+id+' supprimé');
+  };
+  document.getElementById('mbg').classList.add('open');
+}
+function closeMo(){ document.getElementById('mbg').classList.remove('open'); }
+document.getElementById('mbg').addEventListener('click',e=>{ if(e.target.id==='mbg') closeMo(); });
+
+/* ════════════════════════════════════════════════════
+   WHATSAPP FORMAT
+   gp1, gp2, gp3 — number after "gp"
+   Auto-KP if nothing entered
+════════════════════════════════════════════════════ */
+function waLine(s){
+  const d=dat[s.id]||{i:0,k:0,v:0,gp:0,kp:false};
+  if(d.kp) return s.id+'/kp';
+  const p=[];
+  const showI=!inSpOnly(s.id);
+  if(showI&&(d.i||0)>0) p.push('i'+d.i);
+  if((d.k||0)>0) p.push('k'+d.k);
+  if((d.v||0)>0) p.push('v'+d.v);
+  if((d.gp||0)>0) p.push('gp'+(d.gp||0));
+  if(!p.length) return s.id+'/kp'; // auto-kp
+  return s.id+'/'+p.join('/');
+}
+function waText(){ return allStops().map(s=>waLine(s)).join('\n'); }
+
+/* WA color class */
+function waClass(s){
+  const d=dat[s.id]||{i:0,k:0,v:0,gp:0,kp:false};
+  if(d.kp) return 'wkp';
+  const showI=!inSpOnly(s.id);
+  const hasI=(d.i||0)>0 && showI;
+  const hasK=(d.k||0)>0;
+  const hasV=(d.v||0)>0;
+  const hasGP=(d.gp||0)>0;
+  // Rien → auto-kp rouge
+  if(!hasI&&!hasK&&!hasV&&!hasGP) return 'wkp';
+  // K ou V avec IDEXX → bleu
+  if(hasI&&(hasK||hasV)) return 'wb';
+  // K ou V sans IDEXX → jaune
+  if(!hasI&&(hasK||hasV)) return 'wy';
+  // Tout le reste (IDEXX seul, GP seul, IDEXX+GP) → vert
+  return 'wn';
+}
+
+/* ════════════════════════════════════════════════════
+   RÉSUMÉ
+════════════════════════════════════════════════════ */
+function renderSum(){
+  const stops=allStops();
+  let ti=0,tk=0,tv=0,tg=0;
+  stops.forEach(s=>{
+    const d=dat[s.id]||{}; if(d.kp) return;
+    ti+=d.i||0; tk+=d.k||0; tv+=d.v||0; tg+=d.gp||0;
+  });
+  document.getElementById('sum-total').textContent=ti+tk+tv+tg;
+  const bd=document.getElementById('sum-bd'); bd.innerHTML='';
+  if(ti>0) bd.innerHTML+='<span class="sbd sbd-i">i'+ti+'</span>';
+  if(tk>0) bd.innerHTML+='<span class="sbd sbd-k">k'+tk+'</span>';
+  if(tv>0) bd.innerHTML+='<span class="sbd sbd-v">v'+tv+'</span>';
+  if(tg>0) bd.innerHTML+='<span class="sbd sbd-gp">'+tg+'GP</span>';
+
+  const now=new Date();
+  document.getElementById('sum-date').textContent=
+    now.toLocaleDateString('fr-CH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  // WA preview
+  const wb=document.getElementById('wa-box'); wb.innerHTML='';
+  if(!stops.length){ wb.textContent='(aucun stop)'; return; }
+  stops.forEach(s=>{
+    const div=document.createElement('div');
+    div.className=waClass(s);
+    div.textContent=waLine(s);
+    wb.appendChild(div);
+  });
+
+  // Detail
+  const dl=document.getElementById('det-list'); dl.innerHTML='';
+  stops.forEach(s=>{
+    const d=dat[s.id]||{i:0,k:0,v:0,gp:0,kp:false};
+    const showI=!inSpOnly(s.id);
+    const isKP=d.kp||(!showI?!(d.k||d.v||d.gp):!(d.i||d.k||d.v||d.gp));
+    let tags='';
+    if(isKP){ tags='<span class="stag st-kp">KP</span>'; }
+    else {
+      if(showI&&(d.i||0)>0) tags+='<span class="stag st-i">i'+d.i+'</span>';
+      if((d.k||0)>0) tags+='<span class="stag st-k">k'+d.k+'</span>';
+      if((d.v||0)>0) tags+='<span class="stag st-v">v'+d.v+'</span>';
+      if((d.gp||0)>0) tags+='<span class="stag st-gp">'+d.gp+'GP</span>';
+      if(!tags) tags='<span class="stag st-kp">KP</span>';
+    }
+    const row=document.createElement('div'); row.className='det-row';
+    row.innerHTML='<div class="dr-id">'+s.id+'</div><div class="dr-nm">'+s.n+'</div><div class="dr-tags">'+tags+'</div>';
+    dl.appendChild(row);
+  });
+}
+
+function copyWA(){
+  const txt=waText();
+  const fb=()=>{
+    const ta=document.createElement('textarea');
+    ta.value=txt; ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); toast('✓ Copié !'); }
+    catch(e){ toast('Copie manuelle requise'); }
+    document.body.removeChild(ta);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText)
+    navigator.clipboard.writeText(txt).then(()=>toast('✓ Copié pour WhatsApp !')).catch(fb);
+  else fb();
+}
+
+/* ════════════════════════════════════════════════════
+   SAUVEGARDE / HISTORIQUE
+════════════════════════════════════════════════════ */
+function saveTour(){
+  const stops=allStops();
+  if(!stops.length){ toast('Rien à sauvegarder'); return; }
+  let ti=0,tk=0,tv=0,tg=0;
+  stops.forEach(s=>{const d=dat[s.id]||{};if(d.kp)return;ti+=d.i||0;tk+=d.k||0;tv+=d.v||0;tg+=d.gp||0;});
+  const rec={
+    date:new Date().toISOString(),
+    wa:waText(),
+    stops:stops.map(s=>({id:s.id,...(dat[s.id]||{})})),
+    totals:{i:ti,k:tk,v:tv,gp:tg}
+  };
+  const hist=JSON.parse(localStorage.getItem('t2laushist')||'[]');
+  hist.unshift(rec);
+  localStorage.setItem('t2laushist',JSON.stringify(hist.slice(0,30)));
+  // Reset daily state
+  tourStops.clear(); dat={}; done.clear();
+  badge(); saveState();
+  go('hist');
+  toast('Tournée sauvegardée ✓');
+}
+
+function renderHist(){
+  const hist=JSON.parse(localStorage.getItem('t2laushist')||'[]');
+  const el=document.getElementById('hist-list');
+  if(!hist.length){ el.innerHTML='<div class="empty">Aucune tournée sauvegardée.</div>'; return; }
+  el.innerHTML='';
+  hist.forEach(h=>{
+    const d=new Date(h.date);
+    const ds=d.toLocaleDateString('fr-CH',{weekday:'short',day:'numeric',month:'short',year:'numeric'})
+             +' '+d.toLocaleTimeString('fr-CH',{hour:'2-digit',minute:'2-digit'});
+    const t=h.totals||{i:0,k:0,v:0,gp:0};
+    const c=document.createElement('div'); c.className='hcard';
+    c.innerHTML=
+      '<div class="hd">'+ds+'</div>'
+      +'<div class="hstats">'
+      +'<div class="hs"><b>'+h.stops.length+'</b> stops</div>'
+      +'<div class="hs hsi"><b>'+(t.i||0)+'</b> i</div>'
+      +'<div class="hs hsk"><b>'+(t.k||0)+'</b> k</div>'
+      +'<div class="hs hsv"><b>'+(t.v||0)+'</b> v</div>'
+      +'</div>'
+      +'<div class="hwa">'+(h.wa||'').replace(/\n/g,'<br>')+'</div>';
+    el.appendChild(c);
+  });
+}
+
+let _chPend=false,_chTimer;
+function clearHist(){
+  if(!_chPend){_chPend=true;toast('⚠️ Appuyer encore pour effacer');_chTimer=setTimeout(()=>{_chPend=false;},3000);return;}
+  clearTimeout(_chTimer);_chPend=false;
+  localStorage.removeItem('t2laushist');
+  renderHist();
+  toast('Historique effacé');
+}
+
+/* ════════════════════════════════════════════════════
+   PERSISTENCE
+════════════════════════════════════════════════════ */
+function saveSpecial(){
+  localStorage.setItem('t2laussp',JSON.stringify([...special]));
+}
+function loadSpecial(){
+  try{
+    const s=JSON.parse(localStorage.getItem('t2laussp')||'[]');
+    special=new Set(s.map(Number));
+    syncGrid();
+    renderChips();
+  }catch(e){}
+}
+function saveState(){
+  localStorage.setItem('t2lausstate',JSON.stringify({
+    tour:[...tourStops], dat, done:[...done]
+  }));
+}
+function loadState(){
+  try{
+    const s=JSON.parse(localStorage.getItem('t2lausstate')||'{}');
+    if(s.tour) tourStops=new Set(s.tour);
+    if(s.dat)  dat=s.dat;
+    if(s.done) done=new Set(s.done);
+    badge();
+  }catch(e){}
+}
+
+/* ════════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════════ */
+let _tt;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+/* START */
+init();
+</script>
+</body>
+</html>
